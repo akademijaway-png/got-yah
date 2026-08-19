@@ -27,6 +27,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
@@ -227,6 +228,9 @@ def inspect_site(url):
 def add_headers(response):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    if request.path == "/" or request.path.endswith((".js", ".html", ".json")):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
     return response
 
 

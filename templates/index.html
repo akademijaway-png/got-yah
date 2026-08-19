@@ -48,21 +48,11 @@
     .pt-safe { padding-top: max(16px, var(--safe-t)); }
     .btn-hit { min-height: 56px; min-width: 56px; }
     #nav-bar { height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b); }
-    @keyframes slam { 0% { transform: scale(1.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    .anim-slam { animation: slam .45s cubic-bezier(.2,1.3,.3,1) both; }
   </style>
 </head>
 <body>
   <div id="app">
-    <section id="view-splash" class="screen active items-center justify-center bg-ink">
-      <div class="text-center px-8">
-        <img src="/static/icons/icon-512.png" alt="GOT YAH" class="w-24 h-24 mx-auto mb-5 anim-slam" />
-        <h1 class="font-display text-7xl tracking-wide text-lime leading-none">GOT YAH</h1>
-        <p class="mt-3 text-mute text-xs tracking-[0.32em] uppercase">web → app forge</p>
-      </div>
-    </section>
-
-    <section id="view-forge" class="screen bg-ink">
+    <section id="view-forge" class="screen active bg-ink">
       <header class="pt-safe px-5 pb-2 shrink-0">
         <p class="text-[11px] uppercase tracking-[0.28em] text-mute">convert + forge</p>
         <h1 class="font-display text-5xl text-paper leading-none mt-1">WEB → APP</h1>
@@ -76,7 +66,7 @@
         <p id="forge-error" class="hidden text-blush text-sm mt-2"></p>
         <button id="forge-btn" class="btn-hit mt-4 w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg tracking-wide" type="button">FORGE APP</button>
 
-        <div class="mt-8 mb-2 flex items-center justify-between">
+        <div class="mt-8 mb-2">
           <p class="text-[11px] uppercase tracking-[0.22em] text-mute">how it works</p>
         </div>
         <div class="rounded-3xl bg-[#101010] border border-white/10 divide-y divide-white/5 mb-6">
@@ -103,13 +93,10 @@
             <p id="craft-frame" class="text-xs mt-1 text-lime"></p>
           </div>
         </div>
-
         <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="app-name">App name</label>
         <input id="app-name" maxlength="32" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base outline-none focus:border-lime" />
-
         <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2 mt-4" for="app-short">Home screen name</label>
         <input id="app-short" maxlength="12" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base outline-none focus:border-lime" />
-
         <div class="mt-4 grid grid-cols-2 gap-3">
           <div>
             <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="app-theme">Theme</label>
@@ -123,10 +110,8 @@
             </select>
           </div>
         </div>
-
         <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2 mt-4" for="app-icon">Custom icon (optional)</label>
         <input id="app-icon" type="file" accept="image/*" class="block w-full text-sm text-mute file:mr-3 file:h-12 file:px-4 file:rounded-xl file:border-0 file:bg-lime file:text-ink file:font-bold" />
-
         <button id="create-btn" class="btn-hit mt-6 mb-6 w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg" type="button">CREATE APP</button>
       </div>
     </section>
@@ -199,13 +184,25 @@
       </div>
     </section>
 
-    <nav id="nav-bar" class="fixed bottom-0 inset-x-0 z-40 bg-[#0a0a0a]/95 backdrop-blur border-t border-white/10 grid grid-cols-4" style="display:none">
+    <nav id="nav-bar" class="fixed bottom-0 inset-x-0 z-40 bg-[#0a0a0a]/95 backdrop-blur border-t border-white/10 grid grid-cols-4">
       <button data-nav="forge" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-lime" type="button"><span class="text-lg">⚡</span>Forge</button>
       <button data-nav="vault" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button"><span class="text-lg">▣</span>Vault</button>
       <button data-nav="install" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button"><span class="text-lg">↓</span>Install</button>
       <button data-nav="me" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button"><span class="text-lg">○</span>Me</button>
     </nav>
   </div>
-  <script src="/static/js/app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        regs.forEach(function (r) { r.unregister(); });
+      });
+      if (window.caches) {
+        caches.keys().then(function (keys) {
+          keys.forEach(function (k) { caches.delete(k); });
+        });
+      }
+    }
+  </script>
+  <script src="/static/js/app.js?v=3"></script>
 </body>
 </html>
