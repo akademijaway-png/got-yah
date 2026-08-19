@@ -1,4 +1,4 @@
-const CACHE = "got-yah-v1";
+const CACHE = "got-yah-forge-v2";
 const PRECACHE = [
   "/",
   "/manifest.json",
@@ -6,7 +6,6 @@ const PRECACHE = [
   "/static/icons/icon-192.png",
   "/static/icons/icon-512.png",
   "/static/icons/apple-touch-icon.png",
-  "/static/icons/stamp.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -19,9 +18,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) =>
-        Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))
-      )
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
@@ -29,9 +26,9 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
-
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/a/")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

@@ -2,7 +2,7 @@
   "id": "/",
   "name": "GOT YAH",
   "short_name": "GOT YAH",
-  "description": "Hand them the phone. They fall for it. GOT YAH.",
+  "description": "Paste a website. Forge it into an installable phone app.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -10,7 +10,7 @@
   "background_color": "#050505",
   "theme_color": "#050505",
   "lang": "en",
-  "categories": ["entertainment", "games", "lifestyle"],
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "/static/icons/icon-192.png",

@@ -4,13 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#050505" />
-  <meta name="description" content="Hand them the phone. They fall for it. GOT YAH." />
+  <meta name="description" content="GOT YAH — paste a website, forge it into an installable phone app." />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="GOT YAH" />
-  <meta name="format-detection" content="telephone=no" />
-  <title>GOT YAH</title>
+  <title>GOT YAH — Web → App</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png" />
   <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" />
@@ -22,13 +21,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            ink: "#050505",
-            lime: "#C6FF2E",
-            blush: "#FF3D8A",
-            paper: "#EDE8DC",
-            mute: "#8A8A86",
-          },
+          colors: { ink: "#050505", lime: "#C6FF2E", blush: "#FF3D8A", paper: "#EDE8DC", mute: "#8A8A86" },
           fontFamily: {
             display: ['"Bebas Neue"', "Impact", "sans-serif"],
             sans: ['"Outfit"', "system-ui", "sans-serif"],
@@ -41,356 +34,176 @@
     :root { --nav-h: 84px; --safe-b: env(safe-area-inset-bottom, 0px); --safe-t: env(safe-area-inset-top, 0px); }
     html, body { height: 100%; height: 100dvh; overflow: hidden; }
     body {
-      background: #050505;
-      color: #EDE8DC;
-      font-family: "Outfit", system-ui, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      user-select: none;
-      overscroll-behavior: none;
+      background: #050505; color: #EDE8DC; font-family: "Outfit", system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+      user-select: none; overscroll-behavior: none;
     }
+    input, textarea { user-select: text; }
     #app { height: 100%; height: 100dvh; overflow: hidden; }
     .screen { display: none; height: 100%; overflow: hidden; }
     .screen.active { display: flex; flex-direction: column; }
-    .scroll-pane { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+    .scroll-pane { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scrollbar-width: none; }
     .scroll-pane::-webkit-scrollbar { display: none; }
-    .scroll-pane { scrollbar-width: none; }
     .nav-safe { padding-bottom: calc(var(--nav-h) + var(--safe-b)); }
     .pt-safe { padding-top: max(16px, var(--safe-t)); }
-    .btn-hit {
-      min-height: 56px;
-      min-width: 56px;
-    }
-    @keyframes slam {
-      0% { transform: scale(2.4) rotate(-12deg); opacity: 0; filter: blur(8px); }
-      55% { transform: scale(0.92) rotate(3deg); opacity: 1; filter: blur(0); }
-      100% { transform: scale(1) rotate(-6deg); opacity: 1; }
-    }
-    @keyframes flash {
-      0%, 100% { opacity: 0; }
-      15%, 40% { opacity: 1; }
-      55% { opacity: 0; }
-    }
-    @keyframes glitch {
-      0%, 100% { transform: translate(0,0); }
-      20% { transform: translate(-6px, 2px); }
-      40% { transform: translate(5px, -3px); }
-      60% { transform: translate(-3px, 0); }
-    }
-    @keyframes pulse-ring {
-      0% { transform: scale(0.85); opacity: 0.7; }
-      100% { transform: scale(1.35); opacity: 0; }
-    }
-    @keyframes float-up {
-      from { transform: translateY(10px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes shimmer {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-    .anim-slam { animation: slam 0.55s cubic-bezier(.2,1.4,.3,1) both; }
-    .anim-flash { animation: flash 0.7s ease-out both; }
-    .anim-glitch { animation: glitch 0.35s steps(2) 3; }
-    .anim-in { animation: float-up 0.45s ease both; }
-    .pulse-ring { animation: pulse-ring 1.6s ease-out infinite; }
-    .lock-wallpaper {
-      background:
-        radial-gradient(120% 80% at 50% 0%, #1a2740 0%, transparent 55%),
-        linear-gradient(180deg, #0b1220 0%, #050505 70%);
-    }
-    .swipe-hint {
-      background: linear-gradient(90deg, transparent, #ffffffaa, transparent);
-      background-size: 200% 100%;
-      animation: shimmer 2.2s linear infinite;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .trap-card { transition: transform 0.15s ease, border-color 0.15s ease; }
-    .trap-card:active { transform: scale(0.97); }
-    .install-banner { box-shadow: 0 0 0 1px rgba(198,255,46,0.18), 0 20px 60px rgba(0,0,0,0.45); }
+    .btn-hit { min-height: 56px; min-width: 56px; }
     #nav-bar { height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b); }
-    #reveal-canvas { pointer-events: none; }
+    @keyframes slam { 0% { transform: scale(1.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .anim-slam { animation: slam .45s cubic-bezier(.2,1.3,.3,1) both; }
   </style>
 </head>
 <body>
   <div id="app">
-    <!-- SPLASH -->
     <section id="view-splash" class="screen active items-center justify-center bg-ink">
       <div class="text-center px-8">
-        <img src="/static/icons/icon-512.png" alt="GOT YAH" class="w-28 h-28 mx-auto mb-6 anim-slam" />
+        <img src="/static/icons/icon-512.png" alt="GOT YAH" class="w-24 h-24 mx-auto mb-5 anim-slam" />
         <h1 class="font-display text-7xl tracking-wide text-lime leading-none">GOT YAH</h1>
-        <p class="mt-3 text-mute text-sm tracking-[0.28em] uppercase">hand them the phone</p>
+        <p class="mt-3 text-mute text-xs tracking-[0.32em] uppercase">web → app forge</p>
       </div>
     </section>
 
-    <!-- HOME / TRAPS -->
-    <section id="view-home" class="screen bg-ink">
+    <section id="view-forge" class="screen bg-ink">
       <header class="pt-safe px-5 pb-2 shrink-0">
-        <div class="flex items-end justify-between">
-          <div>
-            <p class="text-[11px] uppercase tracking-[0.28em] text-mute">trap deck</p>
-            <h1 class="font-display text-5xl text-paper leading-none mt-1">GOT YAH</h1>
-          </div>
-          <button id="home-hits-pill" class="btn-hit px-4 h-12 rounded-full bg-lime text-ink font-bold text-sm" type="button">
-            <span id="hit-count">0</span> hits
-          </button>
-        </div>
+        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">convert + forge</p>
+        <h1 class="font-display text-5xl text-paper leading-none mt-1">WEB → APP</h1>
       </header>
-      <div class="scroll-pane nav-safe px-5 pb-4">
-        <p class="text-mute text-sm mb-4">Pick a trap. Arm it. Hand the phone over. Don’t laugh.</p>
+      <div class="scroll-pane nav-safe px-5">
+        <p class="text-mute text-sm mb-5 leading-relaxed">Paste any website. GOT YAH wraps it as an installable phone app — icon, full screen, home screen.</p>
+        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="url-input">Website URL</label>
+        <input id="url-input" inputmode="url" autocomplete="url" spellcheck="false"
+          class="w-full h-16 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base text-paper outline-none focus:border-lime"
+          placeholder="https://your-site.com" />
+        <p id="forge-error" class="hidden text-blush text-sm mt-2"></p>
+        <button id="forge-btn" class="btn-hit mt-4 w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg tracking-wide" type="button">FORGE APP</button>
 
-        <button data-trap="lock" class="trap-card w-full text-left rounded-3xl p-5 mb-3 bg-[#101010] border border-white/10 btn-hit" type="button">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-lime/15 text-lime grid place-items-center text-2xl shrink-0">▣</div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-lg">Fake lock</p>
-              <p class="text-mute text-sm">Looks like a lock screen. They swipe up.</p>
-            </div>
-            <span class="text-lime text-xl">›</span>
-          </div>
-        </button>
-
-        <button data-trap="call" class="trap-card w-full text-left rounded-3xl p-5 mb-3 bg-[#101010] border border-white/10 btn-hit" type="button">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-blush/15 text-blush grid place-items-center text-2xl shrink-0">◎</div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-lg">Incoming call</p>
-              <p class="text-mute text-sm">A fake FaceTime from whoever you pick.</p>
-            </div>
-            <span class="text-lime text-xl">›</span>
-          </div>
-        </button>
-
-        <button data-trap="chat" class="trap-card w-full text-left rounded-3xl p-5 mb-3 bg-[#101010] border border-white/10 btn-hit" type="button">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-lime/15 text-lime grid place-items-center text-2xl shrink-0">💬</div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-lg">Fake chat</p>
-              <p class="text-mute text-sm">A juicy message. They tap to reply.</p>
-            </div>
-            <span class="text-lime text-xl">›</span>
-          </div>
-        </button>
-
-        <button data-trap="bank" class="trap-card w-full text-left rounded-3xl p-5 mb-3 bg-[#101010] border border-white/10 btn-hit" type="button">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-blush/15 text-blush grid place-items-center text-2xl shrink-0">⚠</div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-lg">Bank alert</p>
-              <p class="text-mute text-sm">“Unusual activity.” They hit view.</p>
-            </div>
-            <span class="text-lime text-xl">›</span>
-          </div>
-        </button>
-
-        <button data-trap="dead" class="trap-card w-full text-left rounded-3xl p-5 mb-2 bg-[#101010] border border-white/10 btn-hit" type="button">
-          <div class="flex items-center gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-white/5 text-paper grid place-items-center text-2xl shrink-0">●</div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-lg">Dead screen</p>
-              <p class="text-mute text-sm">Black. Silent. They poke it.</p>
-            </div>
-            <span class="text-lime text-xl">›</span>
-          </div>
-        </button>
+        <div class="mt-8 mb-2 flex items-center justify-between">
+          <p class="text-[11px] uppercase tracking-[0.22em] text-mute">how it works</p>
+        </div>
+        <div class="rounded-3xl bg-[#101010] border border-white/10 divide-y divide-white/5 mb-6">
+          <div class="px-4 py-4"><p class="font-semibold">1. Paste a URL</p><p class="text-mute text-sm">Your site, a tool, a dashboard, a shop.</p></div>
+          <div class="px-4 py-4"><p class="font-semibold">2. Brand it</p><p class="text-mute text-sm">Name, icon, colors. We pull favicon + title for you.</p></div>
+          <div class="px-4 py-4"><p class="font-semibold">3. Install</p><p class="text-mute text-sm">Add to Home Screen — or download the app kit zip.</p></div>
+        </div>
       </div>
     </section>
 
-    <!-- SETUP -->
-    <section id="view-setup" class="screen bg-ink">
+    <section id="view-craft" class="screen bg-ink">
       <header class="pt-safe px-5 pb-3 flex items-center gap-3 shrink-0">
-        <button id="setup-back" class="btn-hit w-12 h-12 rounded-2xl bg-white/5 grid place-items-center text-xl" type="button">‹</button>
+        <button id="craft-back" class="btn-hit w-12 h-12 rounded-2xl bg-white/5 grid place-items-center text-xl" type="button">‹</button>
         <div>
-          <p class="text-[11px] uppercase tracking-[0.28em] text-mute">arm trap</p>
-          <h2 id="setup-title" class="font-display text-4xl leading-none">Lock</h2>
+          <p class="text-[11px] uppercase tracking-[0.28em] text-mute">customize</p>
+          <h2 class="font-display text-4xl leading-none">FORGE</h2>
         </div>
       </header>
       <div class="scroll-pane nav-safe px-5">
-        <p id="setup-copy" class="text-mute text-sm mb-6"></p>
-        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="setup-name">Who is it from?</label>
-        <input id="setup-name" maxlength="24" autocomplete="off" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base text-paper outline-none focus:border-lime" placeholder="Mom" />
-        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2 mt-5" for="setup-note">Extra line</label>
-        <input id="setup-note" maxlength="48" autocomplete="off" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base text-paper outline-none focus:border-lime" placeholder="You need to see this" />
-        <div class="mt-8 rounded-3xl border border-lime/30 bg-lime/10 p-4 text-sm">
-          <p class="font-semibold text-lime">How to run it</p>
-          <p class="text-paper/80 mt-1 leading-relaxed">Arm the trap, pass the phone, keep a straight face. Abort anytime with a long-press in the top-left corner.</p>
-        </div>
-        <button id="arm-btn" class="btn-hit mt-6 mb-6 w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg tracking-wide" type="button">ARM TRAP</button>
-      </div>
-    </section>
-
-    <!-- ARMED TRAPS -->
-    <section id="view-trap" class="screen bg-black relative">
-      <button id="abort-hotspot" class="absolute top-0 left-0 z-30 w-16 h-16 opacity-0" type="button" aria-label="Abort"></button>
-
-      <div id="trap-lock" class="hidden absolute inset-0 lock-wallpaper flex flex-col">
-        <div class="pt-safe text-center mt-10">
-          <p id="lock-time" class="font-display text-[108px] leading-none text-white tracking-tight">9:41</p>
-          <p id="lock-date" class="text-white/80 text-lg -mt-1">Wednesday 19 August</p>
-        </div>
-        <div class="mt-auto pb-16 flex flex-col items-center">
-          <div id="lock-track" class="w-[78%] h-16 rounded-full bg-white/10 border border-white/15 overflow-hidden relative">
-            <div id="lock-knob" class="absolute top-1 left-1 w-14 h-14 rounded-full bg-white text-ink grid place-items-center font-bold">↑</div>
+        <div class="flex items-center gap-4 rounded-3xl bg-[#101010] border border-white/10 p-4 mb-5">
+          <img id="craft-icon" src="/static/icons/icon-192.png" alt="" class="w-16 h-16 rounded-2xl bg-black object-cover" />
+          <div class="min-w-0">
+            <p id="craft-host" class="text-mute text-xs truncate"></p>
+            <p id="craft-frame" class="text-xs mt-1 text-lime"></p>
           </div>
-          <p class="swipe-hint mt-4 text-sm font-medium">Swipe up to unlock</p>
         </div>
-      </div>
 
-      <div id="trap-call" class="hidden absolute inset-0 bg-[#0c0c0e] flex flex-col items-center">
-        <p class="pt-safe mt-8 text-white/50 text-xs tracking-[0.3em] uppercase">FaceTime</p>
-        <div class="relative mt-10">
-          <div class="absolute inset-0 rounded-full bg-lime/30 pulse-ring"></div>
-          <div class="relative w-28 h-28 rounded-full bg-gradient-to-br from-lime to-blush grid place-items-center text-ink font-display text-5xl" id="call-initial">M</div>
-        </div>
-        <h2 id="call-name" class="mt-6 font-semibold text-3xl text-white">Mom</h2>
-        <p class="text-white/50 mt-1">incoming FaceTime…</p>
-        <p id="call-note" class="text-white/40 text-sm mt-2"></p>
-        <div class="mt-auto mb-16 flex items-center justify-center gap-16">
-          <button data-reveal="1" class="btn-hit w-20 h-20 rounded-full bg-[#ff3b30] text-white text-xs font-semibold" type="button">DECLINE</button>
-          <button data-reveal="1" class="btn-hit w-20 h-20 rounded-full bg-[#34c759] text-white text-xs font-semibold" type="button">ACCEPT</button>
-        </div>
-      </div>
+        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="app-name">App name</label>
+        <input id="app-name" maxlength="32" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base outline-none focus:border-lime" />
 
-      <div id="trap-chat" class="hidden absolute inset-0 bg-[#0b0b0c] flex flex-col">
-        <div class="pt-safe px-4 pb-3 border-b border-white/10 flex items-center gap-3 bg-[#111]">
-          <div class="w-10 h-10 rounded-full bg-lime text-ink grid place-items-center font-bold" id="chat-initial">A</div>
+        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2 mt-4" for="app-short">Home screen name</label>
+        <input id="app-short" maxlength="12" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base outline-none focus:border-lime" />
+
+        <div class="mt-4 grid grid-cols-2 gap-3">
           <div>
-            <p id="chat-name" class="font-semibold">Alex</p>
-            <p class="text-[11px] text-lime">online</p>
+            <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="app-theme">Theme</label>
+            <input id="app-theme" type="color" value="#050505" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 p-1" />
+          </div>
+          <div>
+            <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="app-display">Display</label>
+            <select id="app-display" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-3 text-base outline-none">
+              <option value="standalone">Standalone</option>
+              <option value="fullscreen">Fullscreen</option>
+            </select>
           </div>
         </div>
-        <div class="flex-1 px-4 py-5 space-y-3">
-          <div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-[#1c1c1e] px-4 py-3 text-sm">you up?</div>
-          <div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-[#1c1c1e] px-4 py-3 text-sm" id="chat-bubble">I need to tell you something. Don’t show anyone.</div>
-          <div class="max-w-[80%] rounded-2xl rounded-tl-sm bg-lime text-ink px-4 py-3 text-sm font-medium" id="chat-hook">Open this. Right now.</div>
-        </div>
-        <button data-reveal="1" class="mx-4 mb-8 btn-hit h-14 rounded-2xl bg-white/10 border border-white/10 text-left px-4 text-mute" type="button">Reply…</button>
-      </div>
 
-      <div id="trap-bank" class="hidden absolute inset-0 bg-[#0a0f0c] flex flex-col px-5">
-        <div class="pt-safe mt-6 flex items-center justify-between">
-          <p class="text-[11px] tracking-[0.28em] uppercase text-lime">Secure</p>
-          <p class="text-[11px] text-mute">NOW</p>
-        </div>
-        <h2 class="font-display text-6xl mt-8 leading-[0.9]">UNUSUAL<br/>ACTIVITY</h2>
-        <p class="text-mute mt-4 text-sm leading-relaxed" id="bank-copy">We spotted a transfer that doesn’t look like you. Confirm this wasn’t you.</p>
-        <div class="mt-8 rounded-3xl bg-white/5 border border-white/10 p-4">
-          <p class="text-[11px] uppercase tracking-[0.2em] text-mute">Merchant</p>
-          <p id="bank-name" class="text-xl font-semibold mt-1">Unknown device</p>
-          <p class="text-lime font-bold text-2xl mt-3">− €482.90</p>
-        </div>
-        <button data-reveal="1" class="mt-auto mb-10 btn-hit w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg" type="button">VIEW DETAILS</button>
-      </div>
+        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2 mt-4" for="app-icon">Custom icon (optional)</label>
+        <input id="app-icon" type="file" accept="image/*" class="block w-full text-sm text-mute file:mr-3 file:h-12 file:px-4 file:rounded-xl file:border-0 file:bg-lime file:text-ink file:font-bold" />
 
-      <div id="trap-dead" class="hidden absolute inset-0 bg-black" data-reveal="1"></div>
-    </section>
-
-    <!-- REVEAL -->
-    <section id="view-reveal" class="screen bg-lime relative overflow-hidden items-center justify-center">
-      <div id="flash-layer" class="absolute inset-0 bg-white anim-flash"></div>
-      <canvas id="reveal-canvas" class="absolute inset-0"></canvas>
-      <div class="relative z-10 text-center px-6">
-        <img src="/static/icons/stamp.png" alt="GOT YAH" class="w-64 h-64 mx-auto anim-slam drop-shadow-2xl" />
-        <p id="reveal-sub" class="mt-2 text-ink/70 font-semibold">you actually fell for that</p>
-        <div class="mt-8 flex gap-3 justify-center">
-          <button id="reveal-again" class="btn-hit px-6 h-14 rounded-2xl bg-ink text-lime font-bold" type="button">AGAIN</button>
-          <button id="reveal-home" class="btn-hit px-6 h-14 rounded-2xl bg-ink/10 border border-ink/20 text-ink font-bold" type="button">HOME</button>
-        </div>
+        <button id="create-btn" class="btn-hit mt-6 mb-6 w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg" type="button">CREATE APP</button>
       </div>
     </section>
 
-    <!-- HITS -->
-    <section id="view-hits" class="screen bg-ink">
+    <section id="view-ready" class="screen bg-ink">
       <header class="pt-safe px-5 pb-2 shrink-0">
-        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">scoreboard</p>
-        <h1 class="font-display text-5xl leading-none">HITS</h1>
+        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">forged</p>
+        <h1 id="ready-title" class="font-display text-5xl leading-none">APP READY</h1>
       </header>
       <div class="scroll-pane nav-safe px-5">
-        <div class="rounded-3xl bg-lime text-ink p-6 mb-5">
-          <p class="text-xs uppercase tracking-[0.22em] font-bold">people got</p>
-          <p id="hits-big" class="font-display text-8xl leading-none">0</p>
-          <p id="hits-streak" class="text-sm font-medium opacity-70">No streak yet. Arm a trap.</p>
+        <div class="rounded-3xl bg-lime text-ink p-5 mb-4 flex items-center gap-4">
+          <img id="ready-icon" src="/static/icons/icon-192.png" alt="" class="w-16 h-16 rounded-2xl bg-black object-cover" />
+          <div class="min-w-0">
+            <p id="ready-name" class="font-extrabold text-xl truncate">App</p>
+            <p id="ready-url" class="text-sm opacity-70 truncate"></p>
+          </div>
         </div>
-        <div id="hits-list" class="space-y-2 pb-4"></div>
+        <a id="open-app" class="btn-hit flex items-center justify-center w-full h-16 rounded-2xl bg-white text-ink font-extrabold text-lg mb-3" href="#">OPEN APP</a>
+        <button id="install-forged" class="btn-hit w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg mb-3" type="button">ADD TO HOME SCREEN</button>
+        <a id="download-kit" class="btn-hit flex items-center justify-center w-full h-16 rounded-2xl bg-[#101010] border border-white/10 font-bold mb-3" href="#">DOWNLOAD APP KIT .ZIP</a>
+        <div id="ios-hint" class="hidden rounded-3xl bg-[#101010] border border-white/10 p-4 text-sm text-mute mb-6">
+          iPhone: open the app → Safari <span class="text-paper">Share</span> → <span class="text-paper">Add to Home Screen</span>.
+        </div>
+        <button id="ready-another" class="btn-hit w-full h-14 rounded-2xl text-lime font-bold mb-6" type="button">Forge another</button>
       </div>
     </section>
 
-    <!-- INSTALL -->
+    <section id="view-vault" class="screen bg-ink">
+      <header class="pt-safe px-5 pb-2 shrink-0">
+        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">your apps</p>
+        <h1 class="font-display text-5xl leading-none">VAULT</h1>
+      </header>
+      <div class="scroll-pane nav-safe px-5">
+        <div id="vault-list" class="space-y-2 pb-4"></div>
+      </div>
+    </section>
+
     <section id="view-install" class="screen bg-ink">
       <header class="pt-safe px-5 pb-2 shrink-0">
-        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">web to app</p>
+        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">this studio</p>
         <h1 class="font-display text-5xl leading-none">INSTALL</h1>
       </header>
       <div class="scroll-pane nav-safe px-5">
-        <div id="install-status" class="install-banner rounded-3xl bg-[#101010] border border-lime/30 p-5 mb-5">
-          <p class="text-lime text-xs uppercase tracking-[0.22em] font-bold" id="install-kicker">Add to home screen</p>
-          <h2 class="font-display text-4xl mt-1" id="install-title">Put GOT YAH on your phone</h2>
-          <p class="text-mute text-sm mt-2 leading-relaxed" id="install-copy">Install it like a real app. No store. Full screen. Icon on your home screen.</p>
+        <div class="rounded-3xl bg-[#101010] border border-lime/30 p-5 mb-5">
+          <p class="text-lime text-xs uppercase tracking-[0.22em] font-bold" id="install-kicker">GOT YAH on your phone</p>
+          <h2 class="font-display text-4xl mt-1" id="install-title">Install the forge</h2>
+          <p class="text-mute text-sm mt-2 leading-relaxed" id="install-copy">Put GOT YAH on your home screen so you can convert sites anytime.</p>
           <button id="install-btn" class="btn-hit mt-5 w-full h-16 rounded-2xl bg-lime text-ink font-extrabold text-lg" type="button">INSTALL GOT YAH</button>
         </div>
-
         <div class="rounded-3xl bg-[#101010] border border-white/10 p-5 mb-3">
-          <p class="font-bold">iPhone / iPad</p>
-          <ol class="mt-3 space-y-2 text-sm text-mute list-decimal pl-5">
-            <li>Open this site in <span class="text-paper">Safari</span></li>
-            <li>Tap the <span class="text-paper">Share</span> button</li>
-            <li>Scroll and tap <span class="text-paper">Add to Home Screen</span></li>
-            <li>Tap <span class="text-paper">Add</span> — then launch GOT YAH from your home screen</li>
-          </ol>
+          <p class="font-bold">iPhone</p>
+          <p class="text-sm text-mute mt-2 leading-relaxed">Safari → Share → Add to Home Screen.</p>
         </div>
         <div class="rounded-3xl bg-[#101010] border border-white/10 p-5 mb-6">
           <p class="font-bold">Android</p>
-          <ol class="mt-3 space-y-2 text-sm text-mute list-decimal pl-5">
-            <li>Open in <span class="text-paper">Chrome</span></li>
-            <li>Tap the menu (⋮) or the install banner</li>
-            <li>Tap <span class="text-paper">Install app</span> / <span class="text-paper">Add to Home screen</span></li>
-          </ol>
+          <p class="text-sm text-mute mt-2 leading-relaxed">Chrome → menu → Install app.</p>
         </div>
       </div>
     </section>
 
-    <!-- ME -->
     <section id="view-me" class="screen bg-ink">
       <header class="pt-safe px-5 pb-2 shrink-0">
-        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">operator</p>
+        <p class="text-[11px] uppercase tracking-[0.28em] text-mute">about</p>
         <h1 class="font-display text-5xl leading-none">ME</h1>
       </header>
       <div class="scroll-pane nav-safe px-5">
-        <label class="block text-[11px] uppercase tracking-[0.22em] text-mute mb-2" for="me-name">Your name</label>
-        <input id="me-name" maxlength="20" class="w-full h-14 rounded-2xl bg-[#101010] border border-white/10 px-4 text-base outline-none focus:border-lime" />
-
-        <div class="mt-5 rounded-3xl bg-[#101010] border border-white/10 divide-y divide-white/5">
-          <label class="flex items-center justify-between px-4 h-16">
-            <span class="font-medium">Sound sting</span>
-            <input id="me-sound" type="checkbox" class="w-6 h-6 accent-[#C6FF2E]" />
-          </label>
-          <label class="flex items-center justify-between px-4 h-16">
-            <span class="font-medium">Haptics</span>
-            <input id="me-haptics" type="checkbox" class="w-6 h-6 accent-[#C6FF2E]" />
-          </label>
-        </div>
-
-        <button id="clear-hits" class="btn-hit mt-5 w-full h-14 rounded-2xl bg-blush/10 text-blush font-bold border border-blush/30" type="button">Clear hit history</button>
-        <p class="text-mute text-xs mt-8 mb-6 leading-relaxed">GOT YAH is a prank app. Don’t use it to scare people about real money, health, or emergencies. Be decent.</p>
+        <p class="text-sm text-mute leading-relaxed mb-5">GOT YAH forges a website into an installable PWA: your name, icon, and full-screen shell. Sites that block embedding still get an app icon + open button.</p>
+        <button id="clear-vault" class="btn-hit w-full h-14 rounded-2xl bg-blush/10 text-blush font-bold border border-blush/30" type="button">Clear local vault</button>
+        <p class="text-mute text-xs mt-8 mb-6 leading-relaxed">Only forge sites you own or have the right to wrap. Don’t clone logins or banks to trick people.</p>
       </div>
     </section>
 
-    <!-- BOTTOM NAV -->
     <nav id="nav-bar" class="fixed bottom-0 inset-x-0 z-40 bg-[#0a0a0a]/95 backdrop-blur border-t border-white/10 grid grid-cols-4" style="display:none">
-      <button data-nav="home" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-lime" type="button">
-        <span class="text-lg">◉</span>Traps
-      </button>
-      <button data-nav="hits" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button">
-        <span class="text-lg">▣</span>Hits
-      </button>
-      <button data-nav="install" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button">
-        <span class="text-lg">↓</span>Install
-      </button>
-      <button data-nav="me" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button">
-        <span class="text-lg">○</span>Me
-      </button>
+      <button data-nav="forge" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-lime" type="button"><span class="text-lg">⚡</span>Forge</button>
+      <button data-nav="vault" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button"><span class="text-lg">▣</span>Vault</button>
+      <button data-nav="install" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button"><span class="text-lg">↓</span>Install</button>
+      <button data-nav="me" class="nav-btn btn-hit flex flex-col items-center justify-center gap-1 text-[11px] font-semibold text-mute" type="button"><span class="text-lg">○</span>Me</button>
     </nav>
   </div>
   <script src="/static/js/app.js"></script>
